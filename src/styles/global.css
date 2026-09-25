@@ -498,7 +498,24 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   transition: background .25s, box-shadow .25s;
 }
 .tl:hover::before { background: var(--cyan); box-shadow: 0 0 14px var(--cyan); }
-.tl__period { font-size: 11px; letter-spacing: .18em; color: var(--mag); }
+.tl__period {
+  font-size: 11px;
+  letter-spacing: .18em;
+  color: var(--mag);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.tl__type {
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--lime);
+  border: 1px solid currentColor;
+  padding: 1px 7px;
+  line-height: 1.6;
+}
 .tl__role {
   font-family: var(--display);
   font-size: clamp(18px, 3.3vw, 24px);
@@ -506,9 +523,43 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   margin: 4px 0 2px;
 }
 .tl__co { color: var(--cyan); font-size: 12.5px; letter-spacing: .08em; margin-bottom: 10px; }
+.tl__desc { margin: 0 0 10px; color: var(--ink); opacity: .82; font-size: 13.5px; line-height: 1.65; max-width: 68ch; }
 .tl__points { margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 13.5px; }
 .tl__points li { position: relative; padding-left: 18px; margin-bottom: 5px; }
 .tl__points li::before { content: "▸"; position: absolute; left: 0; color: var(--cyan); }
+
+/* beberapa posisi di satu perusahaan: titik kecil tersambung garis, ala LinkedIn */
+.tl__roles { list-style: none; margin: 14px 0 0; padding: 0; }
+.tl__sub { position: relative; padding: 0 0 20px 24px; }
+.tl__sub:last-child { padding-bottom: 0; }
+.tl__sub::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bg-2);
+  border: 2px solid var(--mag);
+}
+.tl__sub:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 20px;
+  bottom: 2px;
+  width: 1px;
+  background: var(--line);
+}
+.tl__sub:first-child::before { background: var(--mag); box-shadow: 0 0 10px var(--mag); }
+.tl__subrole {
+  font-family: var(--display);
+  font-size: clamp(15px, 2.6vw, 18px);
+  font-weight: 700;
+  margin: 0 0 2px;
+}
+.tl__subperiod { font-size: 11px; letter-spacing: .14em; color: var(--muted); margin-bottom: 8px; }
 
 /* ---------- VISI & MISI ---------- */
 .manifesto {

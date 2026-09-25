@@ -26,7 +26,7 @@ export default function Hero({ onContact }) {
 
           <div className="hero__cta">
             <a className="btn btn--primary" href="#projects">
-              LIHAT PROJECT
+              VIEW PROJECTS
             </a>
             <button className="btn" onClick={onContact}>
               CONTACT ME
@@ -46,7 +46,7 @@ export default function Hero({ onContact }) {
         <GlitchPhoto
           src={profile.photo}
           mask={profile.photoMask}
-          alt={`Foto ${profile.name}`}
+          alt={`Photo of ${profile.name}`}
           tag="AVAILABLE"
         />
       </div>

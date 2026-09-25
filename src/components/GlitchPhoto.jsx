@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
  * Warna diambil dari file JPEG, bentuk siluetnya dari kanal alpha file mask.
  * Keduanya dihasilkan oleh `node scripts/cutout.mjs`.
  */
-export default function GlitchPhoto({ src, mask, alt = 'Foto profil', tag = 'ONLINE' }) {
+export default function GlitchPhoto({ src, mask, alt = 'Profile photo', tag = 'ONLINE' }) {
   const [ok, setOk] = useState(false)
 
   useEffect(() => {
@@ -48,9 +48,9 @@ export default function GlitchPhoto({ src, mask, alt = 'Foto profil', tag = 'ONL
       ) : (
         <div className="photo__ph">
           <b>[ ! ]</b>
-          FOTO TIDAK TERBACA
+          PHOTO NOT FOUND
           <br />
-          cek file di <span style={{ color: 'var(--cyan)' }}>public/image/</span>
+          check the file in <span style={{ color: 'var(--cyan)' }}>public/image/</span>
         </div>
       )}
     </div>

@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 
 const LINES = [
   '> booting portfolio.sys ...',
-  '> loading modules [ project | experience | visi ]',
+  '> loading modules [ projects | experience | vision ]',
   '> injecting glitch.dll ......... OK',
-  '> kopi level ................... CUKUP',
-  '> status ....................... SIAP TEPAR',
+  '> coffee level ................. ENOUGH',
+  '> status ....................... READY TO SHIP',
 ]
 
 export default function Boot({ onDone }) {
@@ -75,7 +75,7 @@ export default function Boot({ onDone }) {
         <div className="boot__bar">
           <span style={{ width: `${progress}%` }} />
         </div>
-        <div className="boot__hint">TEKAN APA SAJA UNTUK MELEWATI</div>
+        <div className="boot__hint">PRESS ANY KEY TO SKIP</div>
       </div>
     </div>
   )

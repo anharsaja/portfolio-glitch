@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
 const LINKS = [
-  { id: 'projects', no: '01', label: 'PROJECT' },
+  { id: 'projects', no: '01', label: 'PROJECTS' },
   { id: 'experience', no: '02', label: 'EXPERIENCE' },
-  { id: 'vision', no: '03', label: 'VISI & MISI' },
+  { id: 'vision', no: '03', label: 'VISION' },
   { id: 'contact', no: '04', label: 'CONTACT' },
 ]
 
@@ -21,7 +21,7 @@ export default function Nav({ brand }) {
   }, [])
 
   useEffect(() => {
-    const tick = () => setClock(new Date().toLocaleTimeString('id-ID', { hour12: false }))
+    const tick = () => setClock(new Date().toLocaleTimeString('en-GB', { hour12: false }))
     tick()
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
@@ -69,7 +69,7 @@ export default function Nav({ brand }) {
 
       <button
         className={`nav__toggle${open ? ' is-open' : ''}`}
-        aria-label={open ? 'Tutup menu' : 'Buka menu'}
+        aria-label={open ? 'Close menu' : 'Open menu'}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
