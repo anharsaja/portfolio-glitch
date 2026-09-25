@@ -1,0 +1,390 @@
+/* ==========================================================
+   EFEK GLITCH - teks, foto, overlay CRT, dan animasi modal
+   ========================================================== */
+
+/* ---------- 1. TEKS GLITCH ---------- */
+.glitch {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+  white-space: inherit;
+}
+.glitch::before {
+  color: var(--mag);
+  transform: translate(-2px, -1px);
+  animation: gSliceA 4s infinite steps(1);
+}
+.glitch::after {
+  color: var(--cyan);
+  transform: translate(2px, 1px);
+  animation: gSliceB 3.3s infinite steps(1);
+}
+
+@keyframes gSliceA {
+  0%, 92%, 100% { clip-path: inset(0 0 0 0); transform: translate(-2px, -1px); }
+  93% { clip-path: inset(10% 0 78% 0); transform: translate(-9px, -1px); }
+  95% { clip-path: inset(62% 0 18% 0); transform: translate(7px, 2px); }
+  97% { clip-path: inset(38% 0 44% 0); transform: translate(-6px, 0); }
+}
+@keyframes gSliceB {
+  0%, 90%, 100% { clip-path: inset(0 0 0 0); transform: translate(2px, 1px); }
+  91% { clip-path: inset(70% 0 12% 0); transform: translate(9px, -2px); }
+  94% { clip-path: inset(22% 0 60% 0); transform: translate(-8px, 1px); }
+  96% { clip-path: inset(48% 0 36% 0); transform: translate(6px, -1px); }
+}
+
+/* varian besar: glitch lebih agresif + jitter pada teks utama */
+.glitch--lg::before, .glitch--xl::before { animation-duration: 2.6s; }
+.glitch--lg::after,  .glitch--xl::after  { animation-duration: 2.1s; }
+.glitch--xl { animation: gJitter 6s infinite steps(1); }
+
+@keyframes gJitter {
+  0%, 96%, 100% { transform: translate(0, 0) skewX(0deg); }
+  97% { transform: translate(-3px, 1px) skewX(-1.6deg); }
+  98% { transform: translate(3px, -1px) skewX(1.2deg); }
+  99% { transform: translate(-1px, 0) skewX(0deg); }
+}
+
+/* dipicu saat hover atau saat "burst" acak dari App */
+.glitch:hover::before,
+.glitch-burst .glitch::before { animation-duration: .5s; }
+.glitch:hover::after,
+.glitch-burst .glitch::after { animation-duration: .4s; }
+.glitch-burst .fx--bar { animation-duration: 1.2s; opacity: 1; }
+
+/* ---------- 2. OVERLAY LAYAR (CRT) ---------- */
+.fx {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 900;
+}
+.fx--scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, .035) 0px,
+    rgba(255, 255, 255, .035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+.fx--noise {
+  background-image: var(--noise);
+  opacity: .05;
+  animation: gNoise .4s steps(3) infinite;
+}
+@keyframes gNoise {
+  0%   { transform: translate(0, 0); }
+  33%  { transform: translate(-3%, 2%); }
+  66%  { transform: translate(2%, -3%); }
+  100% { transform: translate(0, 0); }
+}
+.fx--vignette {
+  background: radial-gradient(ellipse at center, transparent 52%, rgba(0, 0, 0, .75) 100%);
+}
+.fx--bar {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 240, 255, .07) 45%,
+    rgba(255, 42, 109, .09) 55%,
+    transparent 100%
+  );
+  height: 26vh;
+  inset: auto 0 auto 0;
+  opacity: .8;
+  animation: gSweep 7s linear infinite;
+}
+@keyframes gSweep {
+  0%   { transform: translateY(-40vh); }
+  100% { transform: translateY(140vh); }
+}
+
+/* ---------- 3. FOTO GLITCH (tanpa latar) ----------
+   Warnanya diambil dari file JPEG, bentuk siluetnya dari kanal alpha file
+   mask. Semua lapisan efek memakai mask yang sama, jadi scanline dan cahaya
+   hanya jatuh di badan — bukan di kotak persegi. Bagian bawah badan sudah
+   dibuat pecah dan larut di dalam file mask oleh scripts/cutout.mjs. */
+
+.photo {
+  position: relative;
+  width: min(360px, 74vw);
+  aspect-ratio: 648 / 869;
+  flex: none;
+  isolation: isolate;
+}
+
+/* cahaya latar di belakang subjek */
+.photo__aura {
+  position: absolute;
+  inset: -14% -16% -4%;
+  z-index: -2;
+  background:
+    radial-gradient(52% 44% at 50% 38%, rgba(0, 240, 255, .22), transparent 70%),
+    radial-gradient(44% 38% at 64% 62%, rgba(255, 42, 109, .18), transparent 74%);
+  filter: blur(8px);
+  animation: gAura 6s ease-in-out infinite;
+}
+@keyframes gAura {
+  0%, 100% { opacity: .85; }
+  50% { opacity: 1; }
+}
+
+/* kisi tipis di belakang kepala */
+.photo::before {
+  content: "";
+  position: absolute;
+  inset: 4% -10% 22% -10%;
+  z-index: -3;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .07) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(60% 55% at 50% 45%, #000 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(60% 55% at 50% 45%, #000 20%, transparent 75%);
+}
+
+.photo__glow,
+.photo__subject,
+.photo__slice,
+.photo__ghost,
+.photo__scan,
+.photo__sweep,
+.photo__frag {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+}
+
+/* Semua lapisan dipotong oleh bentuk siluet dari kanal alpha file mask.
+   Tanpa ini, foto JPEG-nya akan tampil sebagai kotak persegi. */
+.photo__subject,
+.photo__slice,
+.photo__ghost,
+.photo__scan,
+.photo__sweep,
+.photo__frag {
+  mask-image: var(--mask);
+  mask-size: contain;
+  mask-position: center top;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: var(--mask);
+  -webkit-mask-size: contain;
+  -webkit-mask-position: center top;
+  -webkit-mask-repeat: no-repeat;
+}
+
+/* --- subjek utama --- */
+/* Cahaya tepinya dipasang di pembungkus, bukan di gambarnya: filter berjalan
+   sebelum mask, jadi kalau disatukan cahayanya akan berbentuk kotak. */
+.photo__glow {
+  filter:
+    drop-shadow(0 0 26px rgba(0, 240, 255, .26))
+    drop-shadow(0 14px 44px rgba(0, 0, 0, .65));
+}
+.photo__subject {
+  background-image: var(--img);
+  background-size: contain;
+  background-position: center top;
+  filter: grayscale(.3) contrast(1.14) brightness(1.03);
+}
+
+/* --- siluet berwarna yang bergeser (pecah kanal RGB) --- */
+.photo__ghost {
+  background-color: currentColor;
+  mix-blend-mode: screen;
+}
+.photo__ghost--m {
+  color: var(--mag);
+  animation: gGhostM 5.2s infinite steps(1);
+}
+.photo__ghost--c {
+  color: var(--cyan);
+  animation: gGhostC 4.3s infinite steps(1);
+}
+@keyframes gGhostM {
+  0%, 84%, 100% { opacity: .2; transform: translate(-4px, 0); }
+  85% { opacity: .8; transform: translate(-16px, 3px); }
+  88% { opacity: .35; transform: translate(10px, -4px); }
+  91% { opacity: .75; transform: translate(-9px, 1px); }
+  94% { opacity: .3; transform: translate(5px, 0); }
+}
+@keyframes gGhostC {
+  0%, 82%, 100% { opacity: .2; transform: translate(4px, 0); }
+  83% { opacity: .75; transform: translate(15px, -3px); }
+  87% { opacity: .3; transform: translate(-11px, 4px); }
+  90% { opacity: .8; transform: translate(8px, -1px); }
+  93% { opacity: .25; transform: translate(-4px, 0); }
+}
+
+/* --- potongan badan yang meloncat ke samping --- */
+.photo__slice {
+  background-image: var(--img);
+  background-size: contain;
+  background-position: center top;
+  opacity: 0;
+}
+.photo__slice--a { animation: gSliceImgA 6.4s infinite steps(1); }
+.photo__slice--b { animation: gSliceImgB 7.7s infinite steps(1); }
+@keyframes gSliceImgA {
+  0%, 76%, 100% { opacity: 0; clip-path: inset(30% 0 62% 0); transform: translateX(0); }
+  77% { opacity: 1; clip-path: inset(26% 0 66% 0); transform: translateX(20px); }
+  79% { opacity: 1; clip-path: inset(41% 0 50% 0); transform: translateX(-26px); }
+  81% { opacity: 1; clip-path: inset(34% 0 58% 0); transform: translateX(11px); }
+}
+@keyframes gSliceImgB {
+  0%, 88%, 100% { opacity: 0; clip-path: inset(58% 0 34% 0); transform: translateX(0); }
+  89% { opacity: 1; clip-path: inset(55% 0 38% 0); transform: translateX(-18px); }
+  91% { opacity: 1; clip-path: inset(68% 0 22% 0); transform: translateX(24px); }
+  93% { opacity: 1; clip-path: inset(12% 0 80% 0); transform: translateX(-13px); }
+}
+
+/* garis scanline di badan */
+.photo__scan {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, .45) 0px,
+    rgba(0, 0, 0, .45) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+  animation: gScanDrift 3s linear infinite;
+}
+@keyframes gScanDrift {
+  to { background-position-y: 3px; }
+}
+
+/* berkas cahaya yang menyapu badan dari atas ke bawah */
+.photo__sweep {
+  background-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 240, 255, .5) 42%,
+    rgba(255, 42, 109, .4) 58%,
+    transparent 100%
+  );
+  background-size: 100% 20%;
+  mix-blend-mode: screen;
+  animation: gPhotoSweep 5.5s linear infinite;
+}
+@keyframes gPhotoSweep {
+  0% { background-position: 0 -25%; }
+  100% { background-position: 0 125%; }
+}
+
+/* --- pecahan badan yang menyala ---
+   File mask sudah berisi badan yang pecah jadi blok di bagian bawah, jadi
+   lapisan ini otomatis hanya mewarnai blok yang tersisa. Kaos oblongnya
+   larut jadi serpihan cyan-magenta, bukan lagi jadi fokus. */
+.photo__frag {
+  background-image: linear-gradient(
+    to bottom,
+    transparent 58%,
+    rgba(0, 240, 255, .8) 72%,
+    rgba(255, 42, 109, .85) 92%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+  animation: gFrag 2.6s steps(1) infinite;
+}
+@keyframes gFrag {
+  0%, 100% { opacity: .5; }
+  18% { opacity: .85; }
+  36% { opacity: .38; }
+  54% { opacity: .95; }
+  72% { opacity: .46; }
+  88% { opacity: .72; }
+}
+
+/* glitch makin galak saat disentuh */
+.photo:hover .photo__ghost--m { animation-duration: .9s; }
+.photo:hover .photo__ghost--c { animation-duration: .75s; }
+.photo:hover .photo__slice--a { animation-duration: 1.1s; }
+.photo:hover .photo__slice--b { animation-duration: 1.4s; }
+.photo:hover .photo__sweep { animation-duration: 1.8s; }
+.photo:hover .photo__frag { animation-duration: .7s; }
+
+/* label kecil */
+.photo__tag {
+  position: absolute;
+  left: 0;
+  bottom: 6%;
+  z-index: 2;
+  background: var(--cyan);
+  color: #04060a;
+  font: 800 10px/1 var(--mono);
+  letter-spacing: .16em;
+  padding: 6px 10px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+}
+
+/* tampilan cadangan kalau file fotonya tidak terbaca */
+.photo__ph {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 6px;
+  text-align: center;
+  color: var(--muted);
+  font: 400 11px/1.6 var(--mono);
+  padding: 20px;
+  border: 1px solid var(--line);
+  background: repeating-linear-gradient(45deg, #0b0e15 0 10px, #0d111a 10px 20px);
+}
+.photo__ph b { color: var(--cyan); font-size: 26px; display: block; }
+
+/* ---------- 4. ANIMASI MODAL ---------- */
+@keyframes gModalIn {
+  0%   { opacity: 0; transform: translate(-14px, 8px) skewX(14deg) scaleY(.7); filter: blur(2px); }
+  25%  { opacity: 1; transform: translate(10px, -4px) skewX(-8deg) scaleY(1.06); }
+  45%  { transform: translate(-6px, 2px) skewX(4deg) scaleY(.97); }
+  65%  { transform: translate(4px, 0) skewX(-2deg) scaleY(1.02); }
+  85%  { transform: translate(-2px, 0) skewX(1deg) scaleY(1); filter: blur(0); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+@keyframes gRowIn {
+  0%   { opacity: 0; transform: translateX(-24px); clip-path: inset(0 100% 0 0); }
+  60%  { opacity: 1; clip-path: inset(0 0 0 0); }
+  100% { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+}
+@keyframes gBackdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---------- 5. HORMATI PREFERENSI PENGGUNA ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .glitch::before,
+  .glitch::after,
+  .glitch--xl,
+  .fx--noise,
+  .fx--bar,
+  .photo__aura,
+  .photo__ghost,
+  .photo__slice,
+  .photo__scan,
+  .photo__sweep,
+  .photo__frag,
+  .ticker__track {
+    animation: none !important;
+  }
+  /* tanpa animasi, siluet warnanya dibuat diam di posisi sedikit bergeser */
+  .photo__ghost--m { opacity: .22; transform: translateX(-4px); }
+  .photo__ghost--c { opacity: .22; transform: translateX(4px); }
+  .photo__slice { opacity: 0; }
+  .photo__sweep { opacity: 0; }
+  .photo__frag { opacity: .6; }
+  * { scroll-behavior: auto !important; }
+}
