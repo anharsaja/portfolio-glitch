@@ -56,11 +56,11 @@ export default function SocialModal({ open, onClose }) {
         <div className="modal__head">
           <div>
             <p className="modal__sub">// CONNECTION ESTABLISHED</p>
-            <h2 className="modal__title glitch" id="modalTitle" data-text="HUBUNGI SAYA">
-              HUBUNGI SAYA
+            <h2 className="modal__title glitch" id="modalTitle" data-text="GET IN TOUCH">
+              GET IN TOUCH
             </h2>
           </div>
-          <button className="modal__close" onClick={onClose} aria-label="Tutup" ref={closeRef}>
+          <button className="modal__close" onClick={onClose} aria-label="Close" ref={closeRef}>
             ×
           </button>
         </div>
@@ -86,8 +86,8 @@ export default function SocialModal({ open, onClose }) {
         ))}
 
         <div className="modal__foot">
-          <span>ESC UNTUK MENUTUP</span>
-          <span>RESPON &lt; 24 JAM</span>
+          <span>PRESS ESC TO CLOSE</span>
+          <span>REPLY &lt; 24 HRS</span>
         </div>
       </div>
     </div>,

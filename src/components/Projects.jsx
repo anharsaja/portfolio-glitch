@@ -3,15 +3,15 @@ import useReveal from '../hooks/useReveal.js'
 import { projects } from '../data.js'
 
 export default function Projects() {
-  const [filter, setFilter] = useState('SEMUA')
+  const [filter, setFilter] = useState('ALL')
 
   const categories = useMemo(
-    () => ['SEMUA', ...Array.from(new Set(projects.map((p) => p.category)))],
+    () => ['ALL', ...Array.from(new Set(projects.map((p) => p.category)))],
     []
   )
 
   const list = useMemo(
-    () => (filter === 'SEMUA' ? projects : projects.filter((p) => p.category === filter)),
+    () => (filter === 'ALL' ? projects : projects.filter((p) => p.category === filter)),
     [filter]
   )
 
@@ -22,11 +22,11 @@ export default function Projects() {
       <div className="wrap">
         <header className="sec__head reveal">
           <span className="sec__num">01</span>
-          <h2 className="sec__title glitch" data-text="SHOWCASE PROJECT">
-            SHOWCASE PROJECT
+          <h2 className="sec__title glitch" data-text="PROJECT SHOWCASE">
+            PROJECT SHOWCASE
           </h2>
           <p className="sec__sub">
-            Kumpulan hal yang pernah saya bangun, rusak, lalu benerin lagi.
+            Things I have built, broken, and fixed again.
           </p>
         </header>
 
